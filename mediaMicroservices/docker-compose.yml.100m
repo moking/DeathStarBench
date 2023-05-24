@@ -29,7 +29,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: movie-id-mongodb
 #    ports:
 #      - 27018:27017
@@ -40,7 +40,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: movie-id-memcached
 #    ports:
 #      - 11212:11211
@@ -82,7 +82,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: user-mongodb
 #    ports:
 #      - 27019:27017
@@ -93,7 +93,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: user-memcached
 #    ports:
 #      - 11213:11211
@@ -127,7 +127,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: review-storage-mongodb
 #    ports:
 #      - 27020:27017
@@ -138,7 +138,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: review-storage-memcached
 #    ports:
 #      - 11215:11211
@@ -157,7 +157,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: user-review-mongodb
 #    ports:
 #      - 27021:27017
@@ -168,7 +168,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: user-review-redis
 #    ports:
 #      - 6381:6379
@@ -221,7 +221,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: cast-info-mongodb
 #    ports:
 #      - 27024:27017
@@ -232,7 +232,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: cast-info-memcached
 #    ports:
 #      - 11219:11211
@@ -251,7 +251,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: plot-mongodb
 #    ports:
 #      - 27025:27017
@@ -262,7 +262,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: plot-memcached
 #    ports:
 #      - 11220:11211
@@ -281,7 +281,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: movie-info-mongodb
 #    ports:
 #      - 27026:27017
@@ -292,7 +292,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1g
+          memory: 100m
     hostname: movie-info-memcached
 #    ports:
 #      - 11221:11211

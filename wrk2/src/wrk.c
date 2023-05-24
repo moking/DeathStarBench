@@ -482,7 +482,7 @@ static int reconnect_socket(thread *thread, connection *c) {
     aeDeleteFileEvent(thread->loop, c->fd, AE_WRITABLE | AE_READABLE);
     sock.close(c);
     close(c->fd);
-    printf("reconnect_socket\n");
+    /*printf("reconnect_socket\n");*/
     return connect_socket(thread, c);
 }
 
