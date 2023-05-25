@@ -99,10 +99,11 @@ networks={'s': "socfb-Reed98",
 workloads={'compose-post': "compose-post.lua http://localhost:8080/wrk2-api/post/compose ",
            'read-home-timeline': "read-home-timeline.lua http://localhost:8080/wrk2-api/home-timeline/read ",
            'read-user-timeline': "read-user-timeline.lua http://localhost:8080/wrk2-api/user-timeline/read ",
-           'mixed-workload': "mixed-workload.lua"}
+           'mixed-workload': "mixed-workload.lua http://localhost:8080"}
 
 
 parser = argparse.ArgumentParser(description='A script to run socialNetowork test in DeadStarBench', formatter_class=argparse.RawTextHelpFormatter)
+parser.add_argument('-b','--build', help='flag showing whether to construct the network without testing', required=False, default=False)
 parser.add_argument('-r','--rps', help='read/sec', required=False, default=1000)
 parser.add_argument('-N','--node', help='read/sec', required=False, default=1)
 parser.add_argument('-m','--memory', help='docker limit: memory size (e.g., 100m, 1g)', required=False, default='100m')
@@ -120,21 +121,26 @@ parser.add_argument('-n','--network', required=False, default="socfb-Reed98",
 parser.add_argument('-o','--output', help='path to output file', required=False, default='/tmp/data.txt')
 
 args = vars(parser.parse_args())
+
+if not validate_arguments(args):
+    exit(1)
+
 output=args['output']
 yml=args['input']
 rps=args['rps']
 duration=args['duration']
 num_threads=args['threads']
 num_con=args['connections']
-
-if not validate_arguments(args):
-    exit(1)
+build_only=args['build']
+num_nodes=args['node']
+msize=args['memory']
+num_cpus=args['cpus']
 
 if os.path.exists(output):
     print("mv %s %s"%(output, output+".old"))
     cmd("mv %s %s"%(output, output+".old"))
 
-yml, conf = generate_yml(yml, msize=args['memory'], cpus=args['cpus'], replicas=args['node'])
+yml, conf = generate_yml(yml, msize=msize, cpus=num_cpus, replicas=num_nodes)
 
 f=open(args['output'], "w+")
 
@@ -145,19 +151,23 @@ print("Register users and construct social graph: %s\n"%network)
 cmd("python3 scripts/init_social_graph.py --graph=%s"%network)
 
 cmd_str='../wrk2/wrk -D exp -t %s'%num_threads + ' -c %s'%num_con + ' -d %s'%duration +' -L -s ./wrk2/scripts/social-network/%s'%workload + " -R %s"%rps
-print("Run workload: %s\n"%cmd_str)
-out=cmd(cmd_str)
+if not build_only:
+    print("Run workload: %s\n"%cmd_str)
+    out=cmd(cmd_str)
 
-print(cmd_str)
-print("View Jaeger traces by accessing http://localhost:16686\n")
-f.write(conf)
-f.write("\n*------------OUTPUT: Start-------------*\n")
-f.write(out)
-f.write("\n*------------OUTPUT: END---------------*\n")
+    print(cmd_str)
+    print("View Jaeger traces by accessing http://localhost:16686\n")
+    f.write(conf)
+    f.write("\n*------------OUTPUT: Start-------------*\n")
+    f.write(out)
+    f.write("\n*------------OUTPUT: END---------------*\n")
 
-cmd("docker-compose -f %s down"%yml)
-cmd("yes|docker image prune")
-cmd("yes|docker volume prune")
+    cmd("docker-compose -f %s down"%yml)
+    cmd("yes|docker image prune")
+    cmd("yes|docker volume prune")
+else:
+    print("\nRun the workload as below:\n")
+    print(cmd_str)
 
 f.close()
 log.close()
