@@ -136,13 +136,9 @@ num_nodes=args['node']
 msize=args['memory']
 num_cpus=args['cpus']
 
-if os.path.exists(output):
-    print("mv %s %s"%(output, output+".old"))
-    cmd("mv %s %s"%(output, output+".old"))
 
 yml, conf = generate_yml(yml, msize=msize, cpus=num_cpus, replicas=num_nodes)
 
-f=open(args['output'], "w+")
 
 cmd("docker-compose -f %s down"%yml)
 cmd("docker-compose -f %s up -d"%yml) 
@@ -157,6 +153,11 @@ if not build_only:
 
     print(cmd_str)
     print("View Jaeger traces by accessing http://localhost:16686\n")
+
+    if os.path.exists(output):
+        print("mv %s %s"%(output, output+".old"))
+        cmd("mv %s %s"%(output, output+".old"))
+    f=open(output, "w+")
     f.write(conf)
     f.write("\n*------------OUTPUT: Start-------------*\n")
     f.write(out)
@@ -165,11 +166,12 @@ if not build_only:
     cmd("docker-compose -f %s down"%yml)
     cmd("yes|docker image prune")
     cmd("yes|docker volume prune")
+    f.close()
+
 else:
     print("\nRun the workload as below:\n")
     print(cmd_str)
 
-f.close()
 log.close()
 
 #os.system("mv %s %s"%(output, output+"."+suffix))
