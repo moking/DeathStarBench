@@ -51,11 +51,15 @@ workloads={'compose-post': "compose-post.lua http://localhost:8080/wrk2-api/post
 
 parser = argparse.ArgumentParser(description='A script to run socialNetowork test in DeadStarBench', formatter_class=argparse.RawTextHelpFormatter)
 
+parser.add_argument('-p','--cpus', help='docker limit: number of cpu (e.g., 100m, 1g)', required=False, default='1')
+parser.add_argument('-d','--duration', help='seconds to run', required=False, default=30)
+parser.add_argument('-t','--threads', help='number of threads', required=False, default=16)
+parser.add_argument('-c','--connections', help='number of connections', required=False, default=16)
 
 parser.add_argument('-r','--rps', help='rps seperated with \",\"', required=False, default="")
 parser.add_argument('-o','--output', help='path to store output', required=False, default="")
 parser.add_argument('-y','--yml', help='yml file for docker compose', required=False, default="./docker-compose-sharding-base.yml")
-parser.add_argument('-c','--clean', help='flag to cleanup', required=False, type=bool, default=False)
+parser.add_argument('-C','--clean', help='flag to cleanup', required=False, type=bool, default=False)
 parser.add_argument('-f','--file', help='python script to run one config test', required=False, default="./run-socialnetwork-one-config.py")
 parser.add_argument('-w','--workload', help="valid workload: \n %s" %list(workloads.keys()), required=False, default="compose-post")
 parser.add_argument('-n','--network', required=False, default="s",
@@ -86,10 +90,10 @@ else:
     QPS=rpss.split(",")
 
 
-cpus='16'
-duration=10
-threads=cpus
-connections=cpus
+cpus=args['cpus']
+duration=args['duration']
+threads=args['threads']
+connections=args['connections']
 workload=args['workload']
 network=args['network']
 output=args['output']
