@@ -104,7 +104,7 @@ wrk='../wrk2/wrk'
 node=2
 msize='1g'
 if args['output'] == "":
-    output="/tmp/dsb-result_node%s_msize%s_cpu%s_threads%s_conn%s_%s_network%s.log"%(node, msize, cpus, threads, connections, workload, networks[network])
+    output="/tmp/dsb-result_node%s_msize%s_cpu%s_threads%s_conn%s_%s_network_%s.log"%(node, msize, cpus, threads, connections, workload, networks[network])
 log("setup test environment: create docker instances, redis cluster, establish network")
 cmd_str="python %s -r %s -N %s -m %s -p %s -d %s -t %s -c %s -i %s -w %s -n %s -o %s -b %s"%(script, \
                                                                                            0, node, msize, cpus, duration, threads, 

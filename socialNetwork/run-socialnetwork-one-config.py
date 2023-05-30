@@ -1,27 +1,24 @@
 #!/usr/bin/env python3
 import os
 import re
-import logging
 import argparse
 import subprocess
 
-
-log=open("/tmp/bench-run.log", "a+")
 
 def cmd(cmd):
     proc=subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     out,err=proc.communicate()
     if err:
-        log.write("CMD: %s failed\n"%cmd)
+        print("CMD: %s failed\n"%cmd)
         return None
     else:
         out=out.decode().strip()
-        log.write("CMD: "+cmd+"\n")
+        print("CMD: "+cmd+"\n")
         if out == "":
-            log.write("Result: suceed\n")
+            print("Result: suceed\n")
         else:
-            log.write("Result: "+out)
-            log.write("\n")
+            print("Result: "+out)
+            print("\n")
         return out
 
 def generate_yml(yml, new_yml='./docker-compose-run.yml', msize='100m', cpus='1', replicas=2):
@@ -60,7 +57,6 @@ suffix=cmd("date +%H-%M-%h-%d")
 
 if cmd("whoami") != "root":
     print("Need root to run the script.")
-    log.close()
     exit(1)
 
 script_dir="./wrk2/scripts/social-network/"
@@ -171,8 +167,6 @@ if not build_only:
 else:
     print("\nRun the workload as below:\n")
     print(cmd_str)
-
-log.close()
 
 #os.system("mv %s %s"%(output, output+"."+suffix))
 print("\nCheck results here: %s"%(output))
