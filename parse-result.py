@@ -31,6 +31,7 @@ latencies={}
 perc=[]
 real_rps={}
 real_tps={}
+benches=[]
 
 for log in logs:
     f=open(log)
@@ -50,6 +51,8 @@ for log in logs:
 
             config=line
             configs=parse_config_line(line)
+            if configs['workload'] not in benches:
+                benches.append(configs['workload'])
         elif line.find("Latency Dist") != -1:
             num_latency=8
         elif num_latency > 0:
@@ -72,43 +75,50 @@ if latencies:
 
 #print(rs)
 
+print(benches)
 
 kvs={}
 RPSs=[]
 
 #print(perc)
+titled=False
 
 for k, v in rs.items():
     c = parse_config_line(k)
+    if not titled:
+        print(c)
+        titled = True
     #print(c['node'])
     #print(c['msize'])
     #print(c)
     if c['node'] == "1":
-        name = "cxl_rps-%s"%c['RPS']
+        name = "cxl_rps-%s-%s"%(c['RPS'], c['workload'])
         if c['RPS'] not in RPSs:
             RPSs.append(c['RPS'])
 
     elif c['node'] == "2":
-        name = "base_rps-%s"%c['RPS']
+        name = "base_rps-%s-%s"%(c['RPS'], c['workload'])
 
     kvs[name] = (v, real_rps[k], real_tps[k]);
 
 
-for rps in RPSs:
-    print("RPS: ", rps)
-    print("Percentile base 1-node")
-    for i in range(len(perc)):
-        p = perc[i]
-        name = "base_rps-%s"%(rps)
-        base = kvs[name][0]
-        name = "cxl_rps-%s"%(rps)
-        cxl = kvs[name][0]
+for b in benches:
+    print("*** workload: %s ***\n"%b)
+    for rps in RPSs:
+        print("RPS: ", rps)
+        print("Percentile base 1-node")
+        for i in range(len(perc)):
+            p = perc[i]
+            name = "base_rps-%s-%s"%(rps, b)
+            base = kvs[name][0]
+            name = "cxl_rps-%s-%s"%(rps, b)
+            cxl = kvs[name][0]
 
-        print("%s %s %s"%(p, base[p], cxl[p]))
+            print("%s %s %s"%(p, base[p], cxl[p]))
 
-    base = "base_rps-%s"%(rps)
-    cxl = "cxl_rps-%s"%(rps)
-    print("RPS %s %s" %(kvs[base][1], kvs[cxl][1]))
-    print("TPS %s %s" %(kvs[base][2], kvs[cxl][2]))
+        base = "base_rps-%s-%s"%(rps, b)
+        cxl = "cxl_rps-%s-%s"%(rps, b)
+        print("RPS %s %s" %(kvs[base][1], kvs[cxl][1]))
+        print("TPS %s %s" %(kvs[base][2], kvs[cxl][2]))
 
-    print("\n")
+        print("\n")

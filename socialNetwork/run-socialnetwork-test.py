@@ -51,7 +51,9 @@ workloads={'compose-post': "compose-post.lua http://localhost:8080/wrk2-api/post
 
 parser = argparse.ArgumentParser(description='A script to run socialNetowork test in DeadStarBench', formatter_class=argparse.RawTextHelpFormatter)
 
-parser.add_argument('-p','--cpus', help='docker limit: number of cpu (e.g., 100m, 1g)', required=False, default='1')
+parser.add_argument('-N','--node', help='number of nodes in cluster', required=False, default=1)
+parser.add_argument('-m','--msize', help='docker limit: memory size (e.g., 100m, 1g)', required=False, default='100m')
+parser.add_argument('-p','--cpus', help='docker limit: number of cpu', required=False, default='1')
 parser.add_argument('-d','--duration', help='seconds to run', required=False, default=30)
 parser.add_argument('-t','--threads', help='number of threads', required=False, default=16)
 parser.add_argument('-c','--connections', help='number of connections', required=False, default=16)
@@ -101,8 +103,8 @@ wrk='../wrk2/wrk'
 
 
 
-node=2
-msize='1g'
+node=args['node']
+msize=args['msize']
 if args['output'] == "":
     output="/tmp/dsb-result_node%s_msize%s_cpu%s_threads%s_conn%s_%s_network_%s.log"%(node, msize, cpus, threads, connections, workload, networks[network])
 log("setup test environment: create docker instances, redis cluster, establish network")
@@ -125,26 +127,26 @@ for rps in QPS:
 rs.close()
 cleanup(yml)
 
-node=1
-msize='2g'
-if args['output'] == "":
-    output="/tmp/dsb-result_node%s_msize%s_cpu%s_threads%s_conn%s_%s_network%s.log"%(node, msize, cpus, threads, connections, workload, networks[network])
-cmd_str="python %s -r %s -N %s -m %s -p %s -d %s -t %s -c %s -i %s -w %s -n %s -o %s -b %s"%(script,
-                                                                                           rps, node, msize, cpus, duration, threads, 
-                                                                                           connections, yml, workload, network, output, True)
-cmd(cmd_str)
+exit(0)
+if False:
+    if args['output'] == "":
+        output="/tmp/dsb-result_node%s_msize%s_cpu%s_threads%s_conn%s_%s_network%s.log"%(node, msize, cpus, threads, connections, workload, networks[network])
+    cmd_str="python %s -r %s -N %s -m %s -p %s -d %s -t %s -c %s -i %s -w %s -n %s -o %s -b %s"%(script,
+                                                                                               rps, node, msize, cpus, duration, threads, 
+                                                                                               connections, yml, workload, network, output, True)
+    cmd(cmd_str)
 
-rs=open(output, 'w+')
-for rps in QPS:
-    cmd_str='%s -D exp'%wrk+ \
-    ' -t %s'%threads + ' -c %s'%connections + ' -d %s'%duration + \
-    ' -L -s ./wrk2/scripts/social-network/%s'%workloads[workload] + " -R %s"%rps
-    out=cmd(cmd_str)
+    rs=open(output, 'w+')
+    for rps in QPS:
+        cmd_str='%s -D exp'%wrk+ \
+        ' -t %s'%threads + ' -c %s'%connections + ' -d %s'%duration + \
+        ' -L -s ./wrk2/scripts/social-network/%s'%workloads[workload] + " -R %s"%rps
+        out=cmd(cmd_str)
 
-    rs.write("\nCONFIG: node:%s msize:%s cpus:%s threads:%s conn:%s workload:%s network:%s RPS:%s\n"%(node, msize, cpus, threads, connections, workload, networks[network], rps))
-    rs.write("*************************************************************\n")
-    rs.write(out+"\n")
-    rs.write("*************************************************************\n")
-rs.close()
-cleanup(yml)
+        rs.write("\nCONFIG: node:%s msize:%s cpus:%s threads:%s conn:%s workload:%s network:%s RPS:%s\n"%(node, msize, cpus, threads, connections, workload, networks[network], rps))
+        rs.write("*************************************************************\n")
+        rs.write(out+"\n")
+        rs.write("*************************************************************\n")
+    rs.close()
+    cleanup(yml)
 

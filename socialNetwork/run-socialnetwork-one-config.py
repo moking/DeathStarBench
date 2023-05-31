@@ -101,7 +101,7 @@ workloads={'compose-post': "compose-post.lua http://localhost:8080/wrk2-api/post
 parser = argparse.ArgumentParser(description='A script to run socialNetowork test in DeadStarBench', formatter_class=argparse.RawTextHelpFormatter)
 parser.add_argument('-b','--build', help='flag showing whether to construct the network without testing', required=False, default=False)
 parser.add_argument('-r','--rps', help='read/sec', required=False, default=1000)
-parser.add_argument('-N','--node', help='read/sec', required=False, default=1)
+parser.add_argument('-N','--node', help='number of nodes in cluster', required=False, default=1)
 parser.add_argument('-m','--memory', help='docker limit: memory size (e.g., 100m, 1g)', required=False, default='100m')
 parser.add_argument('-p','--cpus', help='docker limit: number of cpu (e.g., 100m, 1g)', required=False, default='1')
 parser.add_argument('-d','--duration', help='seconds to run', required=False, default=30)
