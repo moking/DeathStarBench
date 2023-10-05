@@ -3,6 +3,13 @@ import os
 import re
 import argparse
 import subprocess
+import os.path
+
+def basename(s):
+    return os.path.basename(s)
+
+def dirname(s):
+    return os.path.dirname(s)
 
 
 def cmd(cmd):
@@ -171,15 +178,15 @@ lines=file.readlines()
 
 def docker_exec(ins, cmd_str):
     cmd_str="docker exec -u root -it %s bash -c \"%s\"  "%(ins, cmd_str)
-    cmd(cmd_str)
+    return cmd(cmd_str)
 
 def docker_copy_out(ins, src, dst):
     cmd_str = "docker cp %s:%s %s"%(ins, src, dst)
-    cmd(cmd_str)
+    return cmd(cmd_str)
 
-def docker_copy_in(ins, src, dst):
+def docker_copy_in(src, ins, dst):
     cmd_str = "docker cp %s %s:%s"%(src, ins, dst)
-    cmd(cmd_str)
+    return cmd(cmd_str)
 
 for line in lines:
     if "CONTAINER ID" not in line:
@@ -187,21 +194,71 @@ for line in lines:
         image=cols[1]
         ins=cols[-1]
 
+        if image in image_map:
+            continue
+
         new_image_name=image
         if "jaeger" not in ins:
             new_image_name = new_image_name.split("/")[-1]
             new_image_name = new_image_name.split(":")[0]
             new_image_name = new_image_name+image_suffix
 
-            print("Install numactl tools")
-            cmd_str="apt-get update 2>&1 1>&/dev/null; apt-get install -y numactl procps vim 2>&1 1>&/dev/null"
+            print("Install numactl tools on docker image: %s"%new_image_name)
+            cmd_str="apt-get update 2>&1 1>&/dev/null; apt-get install -y numactl procps 2>&1 1>&/dev/null"
             docker_exec(ins, cmd_str)
 
-            cmd_str="numactl -H"
-            docker_exec(ins, cmd_str)
+            # cmd_str="numactl -H"
+            # docker_exec(ins, cmd_str)
+
+            tmp="/tmp/"
+            if "redis" in image or "memcached" in image or "mongo" in image:
+                if "redis" in image:
+                    script="/usr/local/bin/docker-entrypoint.sh"
+                    key="set -- redis-server"
+                    target_key="set -- %s redis-server"%numactl_prefix
+
+                if "memcached" in image:
+                    script="/usr/local/bin/docker-entrypoint.sh"
+                    key="set -- memcached"
+                    target_key="set -- %s memcached"%numactl_prefix
+                if "mongo" in image:
+                    script="/usr/local/bin/docker-entrypoint.sh"
+                    key="numactl --interleave=all"
+                    target_key="%s"%numactl_prefix
+
+                dst=tmp+basename(script)
+
+                cmd_str="if test -f %s.orig; then echo 1; else echo 0; fi"%script
+                ret = docker_exec(ins, cmd_str)
+                if ret == "0":
+                    print("orig file not exist, creating")
+                    cmd_str="cp %s %s.orig"%(script, script)
+                    docker_exec(ins, cmd_str)
+                else:
+                    print("orig file exist, restoring")
+                    cmd_str="cp %s.orig %s"%(script, script)
+                    docker_exec(ins, cmd_str)
+
+                docker_copy_out(ins, script, dst)
+                # cmd("cat %s"%dst)
+                new_src=dst+".new"
 
 
-            exit(1)
+                f1=open(dst, 'r')
+                f2=open(new_src, 'w')
+
+                lines=f1.readlines()
+                for line in lines:
+                    line = line.replace(key, target_key)
+                    f2.write(line)
+                f1.close()
+                f2.close()
+
+                cmd("chmod 755 %s"%new_src)
+
+                docker_copy_in(new_src, ins, script)
+                docker_exec(ins, "ls -lh %s"%script)
+                docker_exec(ins, "cat %s | grep numa"%script)
 
         image_map[image] = new_image_name
         
