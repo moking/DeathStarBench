@@ -265,6 +265,10 @@ for line in lines:
 
 print(image_map)
 
+print("Create yml file with new image")
+new_yml=dirname(yml)+"/numactl-"+basename(yml)
+yml, conf = generate_yml(yml, new_yml = new_yml, replicas=num_nodes, image_map= image_map, numactl_prefix = numactl_prefix, enable_numactl=True)
+
 exit(0)
 print("Register users and construct social graph: %s\n"%network)
 cmd("python3 scripts/init_social_graph.py --graph=%s"%network)
