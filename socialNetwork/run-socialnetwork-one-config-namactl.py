@@ -167,8 +167,9 @@ numactl_prefix = image2numactl_prefix[image_suffix]
 
 yml, conf = generate_yml(yml, replicas=num_nodes, image_map={}, numactl_prefix = numactl_prefix)
 
-# cmd("docker-compose -f %s down"%yml)
-# cmd("docker-compose -f %s up -d"%yml) 
+cmd("docker-compose -f %s down | tee -a /dev/null"%yml)
+
+cmd("docker-compose -f %s up -d"%yml) 
 
 ps_file="/tmp/ps"
 cmd("docker ps > ps_file")
@@ -260,16 +261,23 @@ for line in lines:
                 docker_exec(ins, "ls -lh %s"%script)
                 docker_exec(ins, "cat %s | grep numa"%script)
 
+            # all images need to have numactl installed except jaeger
+            cmd_str="docker image rm -f %s"%(new_image_name)
+            cmd(cmd_str)
+            cmd_str="docker commit %s %s"%(ins, new_image_name)
+            cmd(cmd_str)
+
         image_map[image] = new_image_name
         
 
-print(image_map)
+cmd("docker-compose -f %s down | tee -a /dev/null"%yml)
 
 print("Create yml file with new image")
 new_yml=dirname(yml)+"/numactl-"+basename(yml)
 yml, conf = generate_yml(yml, new_yml = new_yml, replicas=num_nodes, image_map= image_map, numactl_prefix = numactl_prefix, enable_numactl=True)
 
-exit(0)
+cmd("docker-compose -f %s up -d"%yml) 
+
 print("Register users and construct social graph: %s\n"%network)
 cmd("python3 scripts/init_social_graph.py --graph=%s"%network)
 
@@ -278,8 +286,8 @@ if not build_only:
     print("Run workload: %s\n"%cmd_str)
     out=cmd(cmd_str)
 
-    print(cmd_str)
-    print("View Jaeger traces by accessing http://localhost:16686\n")
+    # print(cmd_str)
+    # print("View Jaeger traces by accessing http://localhost:16686\n")
 
     if os.path.exists(output):
         print("mv %s %s"%(output, output+".old"))
@@ -290,9 +298,10 @@ if not build_only:
     f.write(out)
     f.write("\n*------------OUTPUT: END---------------*\n")
 
-    cmd("docker-compose -f %s down"%yml)
-    cmd("yes|docker image prune")
-    cmd("yes|docker volume prune")
+    cmd("numactl -H")
+    cmd("docker-compose -f %s down | tee /dev/null"%yml)
+    cmd("yes|docker image prune | tee /dev/null")
+    cmd("yes|docker volume prune |tee /dev/null")
     f.close()
 
 else:
@@ -301,4 +310,4 @@ else:
 
 #os.system("mv %s %s"%(output, output+"."+suffix))
 print("\nCheck results here: %s"%(output))
-os.system("mv %s /tmp/"%yml)
+cmd("mv %s /tmp/"%yml)
