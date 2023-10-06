@@ -86,7 +86,7 @@ if not os.path.exists(script_dir):
 def validate_arguments(args):
     global workload
     global network
-    print(args)
+    # print(args)
     if not os.path.isfile(args['input']):
         print(args['input']+" does not exist or is not a file\n");
         return False;
@@ -118,7 +118,6 @@ parser = argparse.ArgumentParser(description='A script to run socialNetowork tes
 parser.add_argument('-b','--build', help='flag showing whether to construct the network without testing', required=False, default=False)
 parser.add_argument('-r','--rps', help='read/sec', required=False, default=1000)
 parser.add_argument('-N','--node', help='number of nodes in cluster', required=False, default=1)
-parser.add_argument('-m','--memory', help='docker limit: memory size (e.g., 100m, 1g)', required=False, default='100m')
 parser.add_argument('-p','--cpus', help='docker limit: number of cpu (e.g., 100m, 1g)', required=False, default='1')
 parser.add_argument('-d','--duration', help='seconds to run', required=False, default=30)
 parser.add_argument('-t','--threads', help='number of threads', required=False, default=16)
@@ -131,9 +130,29 @@ parser.add_argument('-n','--network', required=False, default="socfb-Reed98",
 	"\t m:  a medium social network Ego Twitter\n"+
 	"\t l:  a large social network TWITTER-FOLLOWS-MUN")
 parser.add_argument('-o','--output', help='path to output file', required=False, default='/tmp/data.txt')
+# for numa configuration
+parser.add_argument('-m','--mode', help='numa mode to test: m->membind, i->interleave', required=True, default="m")
+parser.add_argument('-M','--memnode', help='numa node(s) to use for memory allocation', required=True, default="0")
+
+def gen_image_suffix(mode, node_list):
+    if mode != "m" and mode != "i":
+        print("numa mode %s not supported"%mode)
+        exit(1)
+    if mode == "m":
+        if not node_list.isdigit():    
+            print("membind can be applied to only one numa node in the test")
+            exit(1)
+        return "-numa-membind-%s"%node_list
+    else:
+        cols=node_list.split(",")
+        for col in cols:
+            if not col.isdigit():
+                print("Invalid interleave node list: %s"%node_list)
+                exit(1)
+        return "-numa-interleave-node-%s"%("-".join(cols))
+
 
 args = vars(parser.parse_args())
-
 if not validate_arguments(args):
     exit(1)
 
@@ -145,12 +164,15 @@ num_threads=args['threads']
 num_con=args['connections']
 build_only=args['build']
 num_nodes=args['node']
-msize=args['memory']
 num_cpus=args['cpus']
 
 image_map = {}
 image2numactl_prefix={}
-image_suffix="-numa-membind-2"
+
+numa_mode=args['mode']
+node_list=args['memnode']
+
+image_suffix=gen_image_suffix(numa_mode, node_list)
 
 for node in [0, 1, 2]:
     image="-numa-membind-%d"%node
@@ -161,7 +183,14 @@ for nodes in ["0,1", "0,2"]:
     prefix="numactl --cpunodebind=0 --interleave=%s"%nodes
     image="-numa-interleave-node-%s"%("-".join(nodes.split(",")))
     image2numactl_prefix[image] = prefix
-print(image2numactl_prefix)
+
+# print(image2numactl_prefix)
+if image_suffix not in image2numactl_prefix:
+    print("image suffix: %s not valid", image_suffix)
+    exit(1)
+
+print("Running args:", args)
+print("\n")
 
 numactl_prefix = image2numactl_prefix[image_suffix]
 
@@ -172,7 +201,7 @@ cmd("docker-compose -f %s down | tee -a /dev/null"%yml)
 cmd("docker-compose -f %s up -d"%yml) 
 
 ps_file="/tmp/ps"
-cmd("docker ps > ps_file")
+cmd("docker ps > %s"%ps_file)
 
 file = open(ps_file, 'r')
 lines=file.readlines()
@@ -272,11 +301,18 @@ for line in lines:
 
 cmd("docker-compose -f %s down | tee -a /dev/null"%yml)
 
+print("******************************")
 print("Create yml file with new image")
 new_yml=dirname(yml)+"/numactl-"+basename(yml)
 yml, conf = generate_yml(yml, new_yml = new_yml, replicas=num_nodes, image_map= image_map, numactl_prefix = numactl_prefix, enable_numactl=True)
 
 cmd("docker-compose -f %s up -d"%yml) 
+print("******************************")
+
+
+cmd("echo %s | tee -a /tmp/numactl.txt" %output)
+cmd("echo %s  | tee -a /tmp/numactl.txt"%("Before construct socialNetwork\n"))
+cmd("numactl -H  | tee -a /tmp/numactl.txt")
 
 print("Register users and construct social graph: %s\n"%network)
 cmd("python3 scripts/init_social_graph.py --graph=%s"%network)
@@ -298,16 +334,17 @@ if not build_only:
     f.write(out)
     f.write("\n*------------OUTPUT: END---------------*\n")
 
-    cmd("numactl -H")
+    cmd("echo %s  | tee -a /tmp/numactl.txt"%("after running test\n"))
+    cmd("numactl -H  | tee -a /tmp/numactl.txt")
+
     cmd("docker-compose -f %s down | tee /dev/null"%yml)
     cmd("yes|docker image prune | tee /dev/null")
     cmd("yes|docker volume prune |tee /dev/null")
     f.close()
+    print("\nCheck results here: %s"%(output))
 
 else:
     print("\nRun the workload as below:\n")
     print(cmd_str)
 
-#os.system("mv %s %s"%(output, output+"."+suffix))
-print("\nCheck results here: %s"%(output))
 cmd("mv %s /tmp/"%yml)
