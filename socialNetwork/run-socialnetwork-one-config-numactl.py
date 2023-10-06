@@ -95,11 +95,14 @@ def validate_arguments(args):
         return False;
     else:
         network=networks[args['network']]
-    if args["workload"] not in workloads:
+    if not args["build"] and args["workload"] not in workloads:
         print("workload not support. Supported workload: \n ", workloads)
         return False;
     else:
-        workload=workloads[args['workload']]
+        if args["build"]:
+            workload="build"
+        else:
+            workload=workloads[args['workload']]
 
     return True
 

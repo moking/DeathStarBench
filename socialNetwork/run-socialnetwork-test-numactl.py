@@ -128,6 +128,8 @@ node=args['node']
 
 image_suffix=gen_image_suffix(numa_mode, node_list)
 
+workload_list=workload.split(",")
+
 if args['output'] == "":
     outdir="/home/fan/cxl/DeathStarBench/logs/"
     if not os.path.exists(outdir):
@@ -139,24 +141,26 @@ log("setup test environment: create docker instances, redis cluster, establish n
 cmd_str="python %s -r %s -N %s -d %s -t %s -c %s -i %s -w %s -n %s -o %s -b %s -m %s -M %s"%(script, \
                                                                                            0, node, duration, threads, 
                                                                                            connections, yml, workload, network, output, True, numa_mode, node_list)
-exit(0)
-
 cmd(cmd_str)
 
-rs=open(output, 'w+')
-for rps in QPS:
-    cmd_str='%s -D exp'%wrk+ \
-    ' -t %s'%threads + ' -c %s'%connections + ' -d %s'%duration + \
-    ' -L -s ./wrk2/scripts/social-network/%s'%workloads[workload] + " -R %s"%rps
-    out=cmd(cmd_str)
+workload_list=workload.split(",")
 
-    rs.write("\nCONFIG: node:%s threads:%s conn:%s workload:%s network:%s RPS:%s numa-config:%s\n"%(node, threads, connections, workload, networks[network], rps, image_suffix[1:]))
-    rs.write("*************************************************************\n")
-    rs.write(out+"\n")
-    rs.write("*************************************************************\n")
-    cmd("echo %s  | tee -a /tmp/numactl.txt"%("after running test\n"))
-    cmd("numactl -H  | tee -a /tmp/numactl.txt")
-rs.close()
+for workload in workload_list:
+    output="%s/dsb-result_node%s_threads%s_conn%s_%s_network_%s-mode%s.log"%(outdir, node, threads, connections, workload, networks[network], image_suffix)
+    rs=open(output, 'w+')
+    for rps in QPS:
+        cmd_str='%s -D exp'%wrk+ \
+        ' -t %s'%threads + ' -c %s'%connections + ' -d %s'%duration + \
+        ' -L -s ./wrk2/scripts/social-network/%s'%workloads[workload] + " -R %s"%rps
+        out=cmd(cmd_str)
+
+        rs.write("\nCONFIG: node:%s threads:%s conn:%s workload:%s network:%s RPS:%s numa-config:%s\n"%(node, threads, connections, workload, networks[network], rps, image_suffix[1:]))
+        rs.write("*************************************************************\n")
+        rs.write(out+"\n")
+        rs.write("*************************************************************\n")
+        cmd("echo %s  | tee -a /tmp/numactl.txt"%("after running test\n"))
+        cmd("numactl -H  | tee -a /tmp/numactl.txt")
+    rs.close()
 cleanup(yml)
 
 exit(0)
