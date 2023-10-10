@@ -4,6 +4,7 @@ import re
 import argparse
 import subprocess
 import os.path
+import time
 
 def basename(s):
     return os.path.basename(s)
@@ -11,6 +12,11 @@ def basename(s):
 def dirname(s):
     return os.path.dirname(s)
 
+def tee(s, file):
+    print(s)
+    out = open(file, 'a+')
+    out.write(s)
+    out.close()
 
 def cmd(cmd):
     proc=subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -27,6 +33,11 @@ def cmd(cmd):
             print("Result: "+out)
             print("\n")
         return out
+
+def cmd_tee(cmd_str, file="/dev/null"):
+    out = cmd(cmd_str)
+    if out:
+        tee(out, file)
 
 def generate_yml(yml, new_yml='./docker-compose-run.yml', replicas=2, enable_numactl=False, image_map={}, numactl_prefix=""):
     if not (os.path.exists(yml)):
@@ -199,7 +210,7 @@ numactl_prefix = image2numactl_prefix[image_suffix]
 
 yml, conf = generate_yml(yml, replicas=num_nodes, image_map={}, numactl_prefix = numactl_prefix)
 
-cmd("docker-compose -f %s down | tee -a /dev/null"%yml)
+cmd("docker-compose -f %s down"%yml)
 
 cmd("docker-compose -f %s up -d"%yml) 
 
@@ -302,7 +313,9 @@ for line in lines:
         image_map[image] = new_image_name
         
 
-cmd("docker-compose -f %s down | tee -a /dev/null"%yml)
+cmd("docker-compose -f %s down"%yml)
+cmd("yes|docker image prune")
+cmd("yes|docker volume prune")
 
 print("******************************")
 print("Create yml file with new image")
@@ -313,12 +326,17 @@ cmd("docker-compose -f %s up -d"%yml)
 print("******************************")
 
 
-cmd("echo %s | tee -a /tmp/numactl.txt" %output)
-cmd("echo %s  | tee -a /tmp/numactl.txt"%("Before construct socialNetwork\n"))
-cmd("numactl -H  | tee -a /tmp/numactl.txt")
+numa_file="/tmp/numactl.txt"
+tee(output, numa_file)
+tee("Before construct socialNetwork\n", numa_file)
+cmd_tee("numactl -H", numa_file)
 
 print("Register users and construct social graph: %s\n"%network)
 cmd("python3 scripts/init_social_graph.py --graph=%s"%network)
+
+for ins in ["socialnetwork_social-graph-redis_1", "socialnetwork_home-timeline-redis_1", "socialnetwork_user-timeline-redis_1"]:
+    cmd_str="docker exec -u root -it %s redis-cli cluster info"%ins
+    cmd(cmd_str)
 
 cmd_str='../wrk2/wrk -D exp -t %s'%num_threads + ' -c %s'%num_con + ' -d %s'%duration +' -L -s ./wrk2/scripts/social-network/%s'%workload + " -R %s"%rps
 if not build_only:
@@ -337,12 +355,12 @@ if not build_only:
     f.write(out)
     f.write("\n*------------OUTPUT: END---------------*\n")
 
-    cmd("echo %s  | tee -a /tmp/numactl.txt"%("after running test\n"))
-    cmd("numactl -H  | tee -a /tmp/numactl.txt")
+    cmd("After running test\n", numa_file)
+    cmd_tee("numactl -H", numa_file)
 
-    cmd("docker-compose -f %s down | tee /dev/null"%yml)
-    cmd("yes|docker image prune | tee /dev/null")
-    cmd("yes|docker volume prune |tee /dev/null")
+    cmd_tee("docker-compose -f %s down"%yml)
+    cmd_tee("yes|docker image prune")
+    cmd_tee("yes|docker volume prune")
     f.close()
     print("\nCheck results here: %s"%(output))
 

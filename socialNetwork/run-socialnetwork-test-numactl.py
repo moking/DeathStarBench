@@ -30,6 +30,12 @@ def cmd(cmd):
             # log("\n")
         return out
 
+def tee(s, file):
+    print(s)
+    out = open(file, 'a+')
+    out.write(s)
+    out.close()
+
 def cleanup(yml):
     cmd("docker-compose -f %s down"%yml)
     cmd("yes|docker image prune")
@@ -158,8 +164,9 @@ for workload in workload_list:
         rs.write("*************************************************************\n")
         rs.write(out+"\n")
         rs.write("*************************************************************\n")
-        cmd("echo %s  | tee -a /tmp/numactl.txt"%("after running test\n"))
-        cmd("numactl -H  | tee -a /tmp/numactl.txt")
+        tee("after running test\n", "/tmp/numactl.txt")
+        out=cmd("numactl -H")
+        tee(out, "/tmp/numactl.txt")
     rs.close()
 cleanup(yml)
 
