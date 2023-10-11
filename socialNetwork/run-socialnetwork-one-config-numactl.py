@@ -39,7 +39,7 @@ def cmd_tee(cmd_str, file="/dev/null"):
     if out:
         tee(out, file)
 
-def generate_yml(yml, new_yml='./docker-compose-run.yml', replicas=2, enable_numactl=False, image_map={}, numactl_prefix=""):
+def generate_yml(yml, new_yml='./docker-compose-run.yml', replicas=2, enable_numactl=False, image_map={}, numactl_prefix="", db_numactl_only=True):
     if not (os.path.exists(yml)):
         print(yml+" not found.\n ")
         return None
@@ -64,12 +64,13 @@ def generate_yml(yml, new_yml='./docker-compose-run.yml', replicas=2, enable_num
             if i != -1:
                 file_w.write(line[:i]+"replicas: %s\n"%replicas)
             else:
-                if enable_numactl:
-                    i = line.find("entrypoint:")
-                    ep_len = len("entrypoint:")
-                    if i != -1:
-                        line = line[:i+ep_len] + "  " + numactl_prefix + line[i+ep_len:]
-                    
+                if not db_numactl_only:
+                    if enable_numactl:
+                        i = line.find("entrypoint:")
+                        ep_len = len("entrypoint:")
+                        if i != -1:
+                            line = line[:i+ep_len] + "  " + numactl_prefix + line[i+ep_len:]
+                        
                 file_w.write(line)
                 
     file_w.close()
