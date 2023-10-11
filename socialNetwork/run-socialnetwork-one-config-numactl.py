@@ -102,7 +102,7 @@ def validate_arguments(args):
         print(args['input']+" does not exist or is not a file\n");
         return False;
     if args["network"] not in networks:
-        print("network should be s/m/l for small/middle/large size network\n")
+        print("network should be s/f/m/l for small/facebook/middle/large size network\n")
         return False;
     else:
         network=networks[args['network']]
@@ -119,6 +119,7 @@ def validate_arguments(args):
 
 
 networks={'s': "socfb-Reed98",
+          'f': "facebook",
           'm': "ego-twitter",
           'l': "soc-twitter-follows-mun"}
 
@@ -141,6 +142,7 @@ parser.add_argument('-w','--workload', help="valid workload: \n %s" %list(worklo
 parser.add_argument('-n','--network', required=False, default="socfb-Reed98",
                     help="network to simulate:\n"+
 	"\t s: a small social network Reed98 Facebook Networks\n"+
+	"\t f:  a larger social network facebook\n"+
 	"\t m:  a medium social network Ego Twitter\n"+
 	"\t l:  a large social network TWITTER-FOLLOWS-MUN")
 parser.add_argument('-o','--output', help='path to output file', required=False, default='/tmp/data.txt')

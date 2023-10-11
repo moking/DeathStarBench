@@ -4,6 +4,7 @@ import re
 import logging
 import argparse
 import subprocess
+import time
 
 def info(args):
     print("Info: ", args);
@@ -47,6 +48,7 @@ if cmd("whoami") != "root":
 
 networks={'s': "socfb-Reed98",
           'm': "ego-twitter",
+          'f': "facebook",
           'l': "soc-twitter-follows-mun"}
 
 workloads={'compose-post': "compose-post.lua http://localhost:8080/wrk2-api/post/compose ",
@@ -77,6 +79,7 @@ parser.add_argument('-w','--workload', help="valid workload: \n %s" %list(worklo
 parser.add_argument('-n','--network', required=False, default="s",
                     help="network to simulate:\n"+
 	"\t s: a small social network Reed98 Facebook Networks\n"+
+	"\t f:  a larger social network facebook\n"+
 	"\t m: a medium social network Ego Twitter\n"+
 	"\t l: a large social network TWITTER-FOLLOWS-MUN")
 
@@ -167,6 +170,7 @@ for workload in workload_list:
         tee("after running test\n", "/tmp/numactl.txt")
         out=cmd("numactl -H")
         tee(out, "/tmp/numactl.txt")
+        time.sleep(10)
     rs.close()
 cleanup(yml)
 

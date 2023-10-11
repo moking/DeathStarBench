@@ -125,6 +125,7 @@ for log in logs:
 # print(workloads)
 # print(rpss)
 # print(numa_config)
+numa_config.sort()
 
 def print_latency_dist(lst):
     for i in lst:
@@ -150,12 +151,13 @@ for replica in replicas:
                             # print(config)
                             # print(real_tps[config])
                             if (numa == numa_config[0]):
-                                print("workload\tRPS\tNUMA-policy\tAverage-latencies\tp99-latency\tTPS")
+                                print("workload:%s,request-rate:%s"%(workload,rps))
+                                print("NUMA-policy\tAverage-latencies\tp99-latency\tTPS\tRPS")
 
                             if print_lat99:
-                                print(workload, rps, numa, avg_latencies[config],latency99(latencies[config]), real_tps[config])
+                                print(numa, avg_latencies[config],latency99(latencies[config]), real_tps[config], real_rps[config])
                             else:
-                                print(workload, rps, numa, avg_latencies[config],"---", real_tps[config])
+                                print(numa, avg_latencies[config],"---", real_tps[config],  real_rps[config])
 
                             if print_lat_dist:
                                 print_latency_dist(latencies[config])
@@ -175,62 +177,3 @@ for config in avg_latencies:
 
 exit(0)
 
-
-if latencies:
-    #print(configs)
-    #print(latencies)
-    rs[config] = latencies
-
-#print(rs)
-
-# print(benches)
-
-kvs={}
-RPSs=[]
-
-#print(perc)
-titled=False
-
-for k, v in rs.items():
-    c = parse_config_line(k)
-    if not titled:
-        # print(c)
-        titled = True
-    # print(c)
-    name = "rps:%s,workload:%s,numa_config:%s"%(c['RPS'], c['workload'], c['numa-config'])
-    if c['RPS'] not in RPSs:
-        RPSs.append(c['RPS'])
-
-    print(v)
-    kvs[name] = (v, avg_latencies[k], real_rps[k], real_tps[k]);
-
-print(kvs)
-
-
-for key,value in kvs.items():
-    print(key)
-    print(value)
-
-exit(0)
-
-print(RPSs)
-for b in benches:
-    print("*** workload: %s ***\n"%b)
-    for rps in RPSs:
-        print("RPS: ", rps)
-        print("Percentile base 1-node")
-        for i in range(len(perc)):
-            p = perc[i]
-            name = "base_rps-%s-%s"%(rps, b)
-            base = kvs[name][0]
-            name = "cxl_rps-%s-%s"%(rps, b)
-            cxl = kvs[name][0]
-
-            print("%s %s %s"%(p, base[p], cxl[p]))
-
-        base = "base_rps-%s-%s"%(rps, b)
-        cxl = "cxl_rps-%s-%s"%(rps, b)
-        print("RPS %s %s" %(kvs[base][1], kvs[cxl][1]))
-        print("TPS %s %s" %(kvs[base][2], kvs[cxl][2]))
-
-        print("\n")

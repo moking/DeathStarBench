@@ -1,0 +1,516 @@
+
+CONFIG: node:5 threads:48 conn:200 workload:mixed-workload network:facebook RPS:1000 numa-config:numa-membind-2
+*************************************************************
+Running 2m test @ http://localhost:8080
+  48 threads and 200 connections
+
+  Thread calibration: mean lat.: 120.377ms, rate sampling interval: 852ms
+  Thread calibration: mean lat.: 80.048ms, rate sampling interval: 613ms
+  Thread calibration: mean lat.: 98.034ms, rate sampling interval: 734ms
+  Thread calibration: mean lat.: 121.210ms, rate sampling interval: 877ms
+  Thread calibration: mean lat.: 86.733ms, rate sampling interval: 589ms
+  Thread calibration: mean lat.: 67.801ms, rate sampling interval: 521ms
+  Thread calibration: mean lat.: 75.683ms, rate sampling interval: 565ms
+  Thread calibration: mean lat.: 75.942ms, rate sampling interval: 528ms
+  Thread calibration: mean lat.: 93.214ms, rate sampling interval: 598ms
+  Thread calibration: mean lat.: 70.160ms, rate sampling interval: 567ms
+  Thread calibration: mean lat.: 106.125ms, rate sampling interval: 767ms
+  Thread calibration: mean lat.: 57.166ms, rate sampling interval: 411ms
+  Thread calibration: mean lat.: 100.703ms, rate sampling interval: 674ms
+  Thread calibration: mean lat.: 60.945ms, rate sampling interval: 463ms
+  Thread calibration: mean lat.: 92.147ms, rate sampling interval: 712ms
+  Thread calibration: mean lat.: 54.730ms, rate sampling interval: 394ms
+  Thread calibration: mean lat.: 78.614ms, rate sampling interval: 648ms
+  Thread calibration: mean lat.: 60.297ms, rate sampling interval: 532ms
+  Thread calibration: mean lat.: 76.370ms, rate sampling interval: 571ms
+  Thread calibration: mean lat.: 83.403ms, rate sampling interval: 624ms
+  Thread calibration: mean lat.: 96.892ms, rate sampling interval: 781ms
+  Thread calibration: mean lat.: 83.005ms, rate sampling interval: 637ms
+  Thread calibration: mean lat.: 61.532ms, rate sampling interval: 419ms
+  Thread calibration: mean lat.: 97.527ms, rate sampling interval: 715ms
+  Thread calibration: mean lat.: 100.838ms, rate sampling interval: 774ms
+  Thread calibration: mean lat.: 76.852ms, rate sampling interval: 532ms
+  Thread calibration: mean lat.: 53.533ms, rate sampling interval: 259ms
+  Thread calibration: mean lat.: 75.813ms, rate sampling interval: 574ms
+  Thread calibration: mean lat.: 66.464ms, rate sampling interval: 628ms
+  Thread calibration: mean lat.: 63.119ms, rate sampling interval: 478ms
+  Thread calibration: mean lat.: 103.950ms, rate sampling interval: 768ms
+  Thread calibration: mean lat.: 94.455ms, rate sampling interval: 687ms
+  Thread calibration: mean lat.: 71.404ms, rate sampling interval: 543ms
+  Thread calibration: mean lat.: 127.277ms, rate sampling interval: 889ms
+  Thread calibration: mean lat.: 78.333ms, rate sampling interval: 624ms
+  Thread calibration: mean lat.: 55.077ms, rate sampling interval: 433ms
+  Thread calibration: mean lat.: 65.041ms, rate sampling interval: 545ms
+  Thread calibration: mean lat.: 107.949ms, rate sampling interval: 750ms
+  Thread calibration: mean lat.: 81.310ms, rate sampling interval: 634ms
+  Thread calibration: mean lat.: 88.835ms, rate sampling interval: 639ms
+  Thread calibration: mean lat.: 79.141ms, rate sampling interval: 617ms
+  Thread calibration: mean lat.: 93.054ms, rate sampling interval: 623ms
+  Thread calibration: mean lat.: 69.582ms, rate sampling interval: 626ms
+  Thread calibration: mean lat.: 29.948ms, rate sampling interval: 39ms
+  Thread calibration: mean lat.: 87.840ms, rate sampling interval: 621ms
+  Thread calibration: mean lat.: 80.166ms, rate sampling interval: 560ms
+  Thread calibration: mean lat.: 49.862ms, rate sampling interval: 301ms
+  Thread calibration: mean lat.: 51.424ms, rate sampling interval: 422ms
+
+-----------------------------------------------------------------------
+Test Results @ http://localhost:8080 
+  Thread Stats   Avg      Stdev     99%   +/- Stdev
+    Latency    57.23ms  111.00ms 503.55ms   87.24%
+    Req/Sec    19.77     13.48    76.00     82.22%
+  Latency Distribution (HdrHistogram - Recorded Latency)
+ 50.000%   11.17ms
+ 75.000%   17.63ms
+ 90.000%  208.90ms
+ 99.000%  503.55ms
+ 99.900%  817.66ms
+ 99.990%    1.16s 
+ 99.999%    1.34s 
+100.000%    1.40s 
+
+  Detailed Percentile spectrum:
+       Value   Percentile   TotalCount 1/(1-Percentile)
+
+       2.825     0.000000            1         1.00
+       9.039     0.100000        10619         1.11
+       9.631     0.200000        21276         1.25
+      10.103     0.300000        31941         1.43
+      10.583     0.400000        42473         1.67
+      11.167     0.500000        52942         2.00
+      11.559     0.550000        58288         2.22
+      12.079     0.600000        63528         2.50
+      12.815     0.650000        68821         2.86
+      14.175     0.700000        74106         3.33
+      17.631     0.750000        79395         4.00
+      21.759     0.775000        82031         4.44
+      52.991     0.800000        84676         5.00
+      97.855     0.825000        87323         5.71
+     135.423     0.850000        89970         6.67
+     172.159     0.875000        92621         8.00
+     189.951     0.887500        93940         8.89
+     208.895     0.900000        95266        10.00
+     230.527     0.912500        96591        11.43
+     254.079     0.925000        97909        13.33
+     280.319     0.937500        99245        16.00
+     294.655     0.943750        99893        17.78
+     310.527     0.950000       100557        20.00
+     327.167     0.956250       101216        22.86
+     344.831     0.962500       101880        26.67
+     366.079     0.968750       102544        32.00
+     378.111     0.971875       102871        35.56
+     391.935     0.975000       103200        40.00
+     407.807     0.978125       103533        45.71
+     425.983     0.981250       103860        53.33
+     448.767     0.984375       104192        64.00
+     460.799     0.985938       104359        71.11
+     474.111     0.987500       104521        80.00
+     492.031     0.989062       104687        91.43
+     512.255     0.990625       104852       106.67
+     534.015     0.992188       105019       128.00
+     549.375     0.992969       105100       142.22
+     565.759     0.993750       105185       160.00
+     582.655     0.994531       105272       182.86
+     604.159     0.995313       105349       213.33
+     629.759     0.996094       105432       256.00
+     645.119     0.996484       105473       284.44
+     657.919     0.996875       105515       320.00
+     672.255     0.997266       105555       365.71
+     691.711     0.997656       105596       426.67
+     715.263     0.998047       105638       512.00
+     728.063     0.998242       105658       568.89
+     741.375     0.998437       105680       640.00
+     757.247     0.998633       105700       731.43
+     786.943     0.998828       105720       853.33
+     819.199     0.999023       105741      1024.00
+     835.583     0.999121       105751      1137.78
+     851.455     0.999219       105762      1280.00
+     866.815     0.999316       105772      1462.86
+     883.199     0.999414       105782      1706.67
+     897.535     0.999512       105793      2048.00
+     925.183     0.999561       105798      2275.56
+     950.271     0.999609       105803      2560.00
+     967.679     0.999658       105808      2925.71
+    1000.959     0.999707       105813      3413.33
+    1022.463     0.999756       105819      4096.00
+    1030.655     0.999780       105821      4551.11
+    1059.839     0.999805       105824      5120.00
+    1070.079     0.999829       105827      5851.43
+    1078.271     0.999854       105829      6826.67
+    1153.023     0.999878       105832      8192.00
+    1159.167     0.999890       105833      9102.22
+    1181.695     0.999902       105834     10240.00
+    1182.719     0.999915       105835     11702.86
+    1220.607     0.999927       105837     13653.33
+    1233.919     0.999939       105838     16384.00
+    1261.567     0.999945       105839     18204.44
+    1261.567     0.999951       105839     20480.00
+    1275.903     0.999957       105840     23405.71
+    1289.215     0.999963       105841     27306.67
+    1289.215     0.999969       105841     32768.00
+    1321.983     0.999973       105842     36408.89
+    1321.983     0.999976       105842     40960.00
+    1321.983     0.999979       105842     46811.43
+    1340.415     0.999982       105843     54613.33
+    1340.415     0.999985       105843     65536.00
+    1340.415     0.999986       105843     72817.78
+    1340.415     0.999988       105843     81920.00
+    1340.415     0.999989       105843     93622.86
+    1397.759     0.999991       105844    109226.67
+    1397.759     1.000000       105844          inf
+#[Mean    =       57.228, StdDeviation   =      110.996]
+#[Max     =     1396.736, Total count    =       105844]
+#[Buckets =           27, SubBuckets     =         2048]
+-----------------------------------------------------------------------
+  115285 requests in 2.00m, 1.41GB read
+Requests/sec:    960.66  
+Transfer/sec:     12.03MB
+*************************************************************
+
+CONFIG: node:5 threads:48 conn:200 workload:mixed-workload network:facebook RPS:5000 numa-config:numa-membind-2
+*************************************************************
+Running 2m test @ http://localhost:8080
+  48 threads and 200 connections
+
+  Thread calibration: mean lat.: 305.308ms, rate sampling interval: 1297ms
+  Thread calibration: mean lat.: 286.123ms, rate sampling interval: 1402ms
+  Thread calibration: mean lat.: 301.488ms, rate sampling interval: 1620ms
+  Thread calibration: mean lat.: 357.582ms, rate sampling interval: 2740ms
+  Thread calibration: mean lat.: 419.698ms, rate sampling interval: 2377ms
+  Thread calibration: mean lat.: 287.789ms, rate sampling interval: 1637ms
+  Thread calibration: mean lat.: 377.359ms, rate sampling interval: 1924ms
+  Thread calibration: mean lat.: 440.117ms, rate sampling interval: 2205ms
+  Thread calibration: mean lat.: 372.516ms, rate sampling interval: 2177ms
+  Thread calibration: mean lat.: 340.436ms, rate sampling interval: 1407ms
+  Thread calibration: mean lat.: 396.485ms, rate sampling interval: 2072ms
+  Thread calibration: mean lat.: 274.658ms, rate sampling interval: 1306ms
+  Thread calibration: mean lat.: 357.159ms, rate sampling interval: 2002ms
+  Thread calibration: mean lat.: 267.955ms, rate sampling interval: 1414ms
+  Thread calibration: mean lat.: 470.945ms, rate sampling interval: 2140ms
+  Thread calibration: mean lat.: 317.701ms, rate sampling interval: 1628ms
+  Thread calibration: mean lat.: 238.079ms, rate sampling interval: 1245ms
+  Thread calibration: mean lat.: 280.313ms, rate sampling interval: 1498ms
+  Thread calibration: mean lat.: 192.287ms, rate sampling interval: 880ms
+  Thread calibration: mean lat.: 284.853ms, rate sampling interval: 1446ms
+  Thread calibration: mean lat.: 304.126ms, rate sampling interval: 1588ms
+  Thread calibration: mean lat.: 271.512ms, rate sampling interval: 1346ms
+  Thread calibration: mean lat.: 215.107ms, rate sampling interval: 1181ms
+  Thread calibration: mean lat.: 252.657ms, rate sampling interval: 1295ms
+  Thread calibration: mean lat.: 167.865ms, rate sampling interval: 837ms
+  Thread calibration: mean lat.: 284.333ms, rate sampling interval: 1337ms
+  Thread calibration: mean lat.: 541.123ms, rate sampling interval: 2801ms
+  Thread calibration: mean lat.: 373.719ms, rate sampling interval: 2332ms
+  Thread calibration: mean lat.: 262.746ms, rate sampling interval: 1374ms
+  Thread calibration: mean lat.: 316.874ms, rate sampling interval: 1636ms
+  Thread calibration: mean lat.: 272.594ms, rate sampling interval: 1455ms
+  Thread calibration: mean lat.: 428.031ms, rate sampling interval: 1949ms
+  Thread calibration: mean lat.: 271.162ms, rate sampling interval: 1279ms
+  Thread calibration: mean lat.: 217.841ms, rate sampling interval: 1116ms
+  Thread calibration: mean lat.: 205.131ms, rate sampling interval: 1063ms
+  Thread calibration: mean lat.: 288.223ms, rate sampling interval: 1522ms
+  Thread calibration: mean lat.: 239.333ms, rate sampling interval: 1289ms
+  Thread calibration: mean lat.: 374.092ms, rate sampling interval: 1941ms
+  Thread calibration: mean lat.: 393.723ms, rate sampling interval: 2002ms
+  Thread calibration: mean lat.: 362.069ms, rate sampling interval: 1820ms
+  Thread calibration: mean lat.: 460.393ms, rate sampling interval: 1988ms
+  Thread calibration: mean lat.: 321.105ms, rate sampling interval: 1530ms
+  Thread calibration: mean lat.: 311.163ms, rate sampling interval: 1460ms
+  Thread calibration: mean lat.: 225.899ms, rate sampling interval: 1219ms
+  Thread calibration: mean lat.: 235.615ms, rate sampling interval: 1187ms
+  Thread calibration: mean lat.: 397.343ms, rate sampling interval: 1555ms
+  Thread calibration: mean lat.: 245.563ms, rate sampling interval: 1360ms
+  Thread calibration: mean lat.: 208.230ms, rate sampling interval: 993ms
+
+-----------------------------------------------------------------------
+Test Results @ http://localhost:8080 
+  Thread Stats   Avg      Stdev     99%   +/- Stdev
+    Latency     2.86s     2.66s   10.21s    68.14%
+    Req/Sec   102.56     26.01   169.00     70.45%
+  Latency Distribution (HdrHistogram - Recorded Latency)
+ 50.000%    2.15s 
+ 75.000%    4.69s 
+ 90.000%    6.71s 
+ 99.000%   10.21s 
+ 99.900%   12.54s 
+ 99.990%   13.68s 
+ 99.999%   14.04s 
+100.000%   14.17s 
+
+  Detailed Percentile spectrum:
+       Value   Percentile   TotalCount 1/(1-Percentile)
+
+       2.553     0.000000            1         1.00
+      97.087     0.100000        54418         1.11
+     358.143     0.200000       108831         1.25
+     712.703     0.300000       163261         1.43
+    1287.167     0.400000       217656         1.67
+    2146.303     0.500000       272047         2.00
+    2625.535     0.550000       299281         2.22
+    3110.911     0.600000       326509         2.50
+    3641.343     0.650000       353662         2.86
+    4163.583     0.700000       380885         3.33
+    4694.015     0.750000       408124         4.00
+    4964.351     0.775000       421828         4.44
+    5242.879     0.800000       435484         5.00
+    5554.175     0.825000       449000         5.71
+    5898.239     0.850000       462514         6.67
+    6283.263     0.875000       476182         8.00
+    6488.063     0.887500       482887         8.89
+    6709.247     0.900000       489758        10.00
+    6950.911     0.912500       496495        11.43
+    7225.343     0.925000       503306        13.33
+    7536.639     0.937500       510145        16.00
+    7712.767     0.943750       513487        17.78
+    7925.759     0.950000       516948        20.00
+    8171.519     0.956250       520338        22.86
+    8421.375     0.962500       523693        26.67
+    8708.095     0.968750       527093        32.00
+    8863.743     0.971875       528839        35.56
+    9027.583     0.975000       530538        40.00
+    9207.807     0.978125       532204        45.71
+    9412.607     0.981250       533909        53.33
+    9641.983     0.984375       535588        64.00
+    9789.439     0.985938       536441        71.11
+    9945.087     0.987500       537319        80.00
+   10100.735     0.989062       538155        91.43
+   10280.959     0.990625       539005       106.67
+   10469.375     0.992188       539871       128.00
+   10567.679     0.992969       540303       142.22
+   10682.367     0.993750       540699       160.00
+   10870.783     0.994531       541132       182.86
+   11051.007     0.995313       541547       213.33
+   11239.423     0.996094       541985       256.00
+   11329.535     0.996484       542191       284.44
+   11427.839     0.996875       542391       320.00
+   11558.911     0.997266       542618       365.71
+   11681.791     0.997656       542819       426.67
+   11804.671     0.998047       543030       512.00
+   11894.783     0.998242       543137       568.89
+   12001.279     0.998437       543239       640.00
+   12124.159     0.998633       543349       731.43
+   12337.151     0.998828       543452       853.33
+   12566.527     0.999023       543560      1024.00
+   12648.447     0.999121       543611      1137.78
+   12771.327     0.999219       543667      1280.00
+   12853.247     0.999316       543718      1462.86
+   12984.319     0.999414       543775      1706.67
+   13090.815     0.999512       543827      2048.00
+   13180.927     0.999561       543851      2275.56
+   13262.847     0.999609       543877      2560.00
+   13328.383     0.999658       543907      2925.71
+   13377.535     0.999707       543932      3413.33
+   13451.263     0.999756       543959      4096.00
+   13467.647     0.999780       543973      4551.11
+   13508.607     0.999805       543983      5120.00
+   13557.759     0.999829       543998      5851.43
+   13598.719     0.999854       544011      6826.67
+   13656.063     0.999878       544026      8192.00
+   13672.447     0.999890       544034      9102.22
+   13680.639     0.999902       544038     10240.00
+   13697.023     0.999915       544045     11702.86
+   13721.599     0.999927       544050     13653.33
+   13787.135     0.999939       544056     16384.00
+   13811.711     0.999945       544060     18204.44
+   13828.095     0.999951       544064     20480.00
+   13852.671     0.999957       544068     23405.71
+   13877.247     0.999963       544072     27306.67
+   13885.439     0.999969       544075     32768.00
+   13885.439     0.999973       544075     36408.89
+   13893.631     0.999976       544076     40960.00
+   13918.207     0.999979       544078     46811.43
+   13934.591     0.999982       544080     54613.33
+   13942.783     0.999985       544081     65536.00
+   13967.359     0.999986       544082     72817.78
+   14000.127     0.999988       544083     81920.00
+   14041.087     0.999989       544084     93622.86
+   14065.663     0.999991       544086    109226.67
+   14065.663     0.999992       544086    131072.00
+   14065.663     0.999993       544086    145635.56
+   14065.663     0.999994       544086    163840.00
+   14106.623     0.999995       544087    187245.71
+   14106.623     0.999995       544087    218453.33
+   14106.623     0.999996       544087    262144.00
+   14155.775     0.999997       544088    291271.11
+   14155.775     0.999997       544088    327680.00
+   14155.775     0.999997       544088    374491.43
+   14155.775     0.999998       544088    436906.67
+   14155.775     0.999998       544088    524288.00
+   14172.159     0.999998       544089    582542.22
+   14172.159     1.000000       544089          inf
+#[Mean    =     2860.517, StdDeviation   =     2655.850]
+#[Max     =    14163.968, Total count    =       544089]
+#[Buckets =           27, SubBuckets     =         2048]
+-----------------------------------------------------------------------
+  591924 requests in 2.00m, 7.25GB read
+Requests/sec:   4932.70  
+Transfer/sec:     61.88MB
+*************************************************************
+
+CONFIG: node:5 threads:48 conn:200 workload:mixed-workload network:facebook RPS:10000 numa-config:numa-membind-2
+*************************************************************
+Running 2m test @ http://localhost:8080
+  48 threads and 200 connections
+
+  Thread calibration: mean lat.: 2757.903ms, rate sampling interval: 10797ms
+  Thread calibration: mean lat.: 3060.568ms, rate sampling interval: 9060ms
+  Thread calibration: mean lat.: 2833.501ms, rate sampling interval: 9617ms
+  Thread calibration: mean lat.: 3054.978ms, rate sampling interval: 10272ms
+  Thread calibration: mean lat.: 2797.299ms, rate sampling interval: 9084ms
+  Thread calibration: mean lat.: 3012.408ms, rate sampling interval: 10117ms
+  Thread calibration: mean lat.: 2958.637ms, rate sampling interval: 9650ms
+  Thread calibration: mean lat.: 2326.845ms, rate sampling interval: 7962ms
+  Thread calibration: mean lat.: 2880.643ms, rate sampling interval: 8929ms
+  Thread calibration: mean lat.: 2626.034ms, rate sampling interval: 8839ms
+  Thread calibration: mean lat.: 2957.897ms, rate sampling interval: 9461ms
+  Thread calibration: mean lat.: 2710.193ms, rate sampling interval: 8253ms
+  Thread calibration: mean lat.: 2120.183ms, rate sampling interval: 8286ms
+  Thread calibration: mean lat.: 2921.502ms, rate sampling interval: 9576ms
+  Thread calibration: mean lat.: 2601.697ms, rate sampling interval: 8888ms
+  Thread calibration: mean lat.: 2695.546ms, rate sampling interval: 9142ms
+  Thread calibration: mean lat.: 2704.493ms, rate sampling interval: 10248ms
+  Thread calibration: mean lat.: 3129.329ms, rate sampling interval: 9863ms
+  Thread calibration: mean lat.: 2610.082ms, rate sampling interval: 8855ms
+  Thread calibration: mean lat.: 2800.729ms, rate sampling interval: 9355ms
+  Thread calibration: mean lat.: 2890.933ms, rate sampling interval: 10444ms
+  Thread calibration: mean lat.: 3146.756ms, rate sampling interval: 9797ms
+  Thread calibration: mean lat.: 2237.923ms, rate sampling interval: 7323ms
+  Thread calibration: mean lat.: 2440.226ms, rate sampling interval: 8724ms
+  Thread calibration: mean lat.: 3015.989ms, rate sampling interval: 9994ms
+  Thread calibration: mean lat.: 3300.431ms, rate sampling interval: 10772ms
+  Thread calibration: mean lat.: 2776.203ms, rate sampling interval: 9535ms
+  Thread calibration: mean lat.: 2825.907ms, rate sampling interval: 8822ms
+  Thread calibration: mean lat.: 2788.083ms, rate sampling interval: 8413ms
+  Thread calibration: mean lat.: 2728.872ms, rate sampling interval: 9060ms
+  Thread calibration: mean lat.: 3029.049ms, rate sampling interval: 10379ms
+  Thread calibration: mean lat.: 2959.822ms, rate sampling interval: 9707ms
+  Thread calibration: mean lat.: 2950.749ms, rate sampling interval: 9420ms
+  Thread calibration: mean lat.: 2317.643ms, rate sampling interval: 7417ms
+  Thread calibration: mean lat.: 3023.445ms, rate sampling interval: 9027ms
+  Thread calibration: mean lat.: 2449.466ms, rate sampling interval: 9682ms
+  Thread calibration: mean lat.: 3017.678ms, rate sampling interval: 9519ms
+  Thread calibration: mean lat.: 2993.467ms, rate sampling interval: 9420ms
+  Thread calibration: mean lat.: 3224.235ms, rate sampling interval: 10010ms
+  Thread calibration: mean lat.: 2556.420ms, rate sampling interval: 8904ms
+  Thread calibration: mean lat.: 2351.946ms, rate sampling interval: 8716ms
+  Thread calibration: mean lat.: 2592.232ms, rate sampling interval: 8327ms
+  Thread calibration: mean lat.: 3162.711ms, rate sampling interval: 10199ms
+  Thread calibration: mean lat.: 2785.128ms, rate sampling interval: 9158ms
+  Thread calibration: mean lat.: 2763.406ms, rate sampling interval: 9068ms
+  Thread calibration: mean lat.: 3012.463ms, rate sampling interval: 9191ms
+  Thread calibration: mean lat.: 2774.800ms, rate sampling interval: 9027ms
+  Thread calibration: mean lat.: 2747.768ms, rate sampling interval: 9953ms
+
+-----------------------------------------------------------------------
+Test Results @ http://localhost:8080 
+  Thread Stats   Avg      Stdev     99%   +/- Stdev
+    Latency    30.18s    15.79s    0.98m    56.74%
+    Req/Sec   110.43     15.53   140.00     71.20%
+  Latency Distribution (HdrHistogram - Recorded Latency)
+ 50.000%   28.30s 
+ 75.000%   44.70s 
+ 90.000%    0.86m 
+ 99.000%    0.98m 
+ 99.900%    1.04m 
+ 99.990%    1.08m 
+ 99.999%    1.09m 
+100.000%    1.09m 
+
+  Detailed Percentile spectrum:
+       Value   Percentile   TotalCount 1/(1-Percentile)
+
+    2306.047     0.000000            1         1.00
+    9682.943     0.100000        58661         1.11
+   13869.055     0.200000       117301         1.25
+   18300.927     0.300000       175810         1.43
+   22659.071     0.400000       234577         1.67
+   28295.167     0.500000       293107         2.00
+   32571.391     0.550000       322314         2.22
+   36405.247     0.600000       351713         2.50
+   39616.511     0.650000       381097         2.86
+   42270.719     0.700000       410490         3.33
+   44695.551     0.750000       439857         4.00
+   45809.663     0.775000       454236         4.44
+   46989.311     0.800000       469185         5.00
+   48103.423     0.825000       483621         5.71
+   49184.767     0.850000       498152         6.67
+   50429.951     0.875000       512951         8.00
+   51052.543     0.887500       520430         8.89
+   51675.135     0.900000       527616        10.00
+   52330.495     0.912500       534849        11.43
+   53084.159     0.925000       542266        13.33
+   53837.823     0.937500       549479        16.00
+   54231.039     0.943750       553058        17.78
+   54657.023     0.950000       556725        20.00
+   55083.007     0.956250       560481        22.86
+   55541.759     0.962500       564267        26.67
+   56000.511     0.968750       567856        32.00
+   56328.191     0.971875       569644        35.56
+   56754.175     0.975000       571493        40.00
+   57081.855     0.978125       573286        45.71
+   57409.535     0.981250       575077        53.33
+   57802.751     0.984375       576904        64.00
+   58032.127     0.985938       577824        71.11
+   58261.503     0.987500       578680        80.00
+   58589.183     0.989062       579713        91.43
+   58884.095     0.990625       580620       106.67
+   59146.239     0.992188       581517       128.00
+   59310.079     0.992969       581952       142.22
+   59473.919     0.993750       582370       160.00
+   59670.527     0.994531       582867       182.86
+   59899.903     0.995313       583290       213.33
+   60129.279     0.996094       583721       256.00
+   60325.887     0.996484       583959       284.44
+   60456.959     0.996875       584181       320.00
+   60653.567     0.997266       584401       365.71
+   60948.479     0.997656       584643       426.67
+   61243.391     0.998047       584867       512.00
+   61374.463     0.998242       584982       568.89
+   61603.839     0.998437       585089       640.00
+   61964.287     0.998633       585217       731.43
+   62128.127     0.998828       585326       853.33
+   62455.807     0.999023       585442      1024.00
+   62586.879     0.999121       585498      1137.78
+   62750.719     0.999219       585563      1280.00
+   62849.023     0.999316       585618      1462.86
+   62914.559     0.999414       585662      1706.67
+   63176.703     0.999512       585719      2048.00
+   63340.543     0.999561       585752      2275.56
+   63471.615     0.999609       585786      2560.00
+   63569.919     0.999658       585803      2925.71
+   63930.367     0.999707       585838      3413.33
+   64061.439     0.999756       585868      4096.00
+   64126.975     0.999780       585875      4551.11
+   64192.511     0.999805       585892      5120.00
+   64225.279     0.999829       585905      5851.43
+   64421.887     0.999854       585926      6826.67
+   64487.423     0.999878       585937      8192.00
+   64520.191     0.999890       585942      9102.22
+   64552.959     0.999902       585954     10240.00
+   64552.959     0.999915       585954     11702.86
+   64618.495     0.999927       585961     13653.33
+   64684.031     0.999939       585974     16384.00
+   64684.031     0.999945       585974     18204.44
+   65077.247     0.999951       585976     20480.00
+   65175.551     0.999957       585979     23405.71
+   65208.319     0.999963       585987     27306.67
+   65208.319     0.999969       585987     32768.00
+   65208.319     0.999973       585987     36408.89
+   65437.695     0.999976       585991     40960.00
+   65437.695     0.999979       585991     46811.43
+   65470.463     0.999982       585994     54613.33
+   65503.231     0.999985       585999     65536.00
+   65503.231     0.999986       585999     72817.78
+   65503.231     0.999988       585999     81920.00
+   65503.231     0.999989       585999     93622.86
+   65503.231     0.999991       585999    109226.67
+   65503.231     0.999992       585999    131072.00
+   65503.231     0.999993       585999    145635.56
+   65535.999     0.999994       586003    163840.00
+   65535.999     1.000000       586003          inf
+#[Mean    =    30179.764, StdDeviation   =    15791.441]
+#[Max     =    65503.232, Total count    =       586003]
+#[Buckets =           27, SubBuckets     =         2048]
+-----------------------------------------------------------------------
+  635625 requests in 2.00m, 7.78GB read
+Requests/sec:   5296.43  
+Transfer/sec:     66.38MB
+*************************************************************

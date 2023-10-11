@@ -1,0 +1,5 @@
+
+CONFIG: node:5 threads:16 conn:16 workload:read-home-timeline network:facebook RPS:5000 numa-config:numa-interleave-node-0-1
+*************************************************************
+
+*************************************************************
