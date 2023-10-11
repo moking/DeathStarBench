@@ -172,6 +172,30 @@ args = vars(parser.parse_args())
 if not validate_arguments(args):
     exit(1)
 
+def prepare_system_setup():
+    path="/sys/kernel/mm/transparent_hugepage/enabled"
+    cmd_str="cat %s"%path
+    cmd(cmd_str)
+    cmd_str="echo never > %s"%path
+    cmd(cmd_str)
+    cmd_str="cat %s"%path
+    cmd(cmd_str)
+
+    cmd_str="apt-get install -y cpufrequtils"
+    cmd(cmd_str)
+    cmd_str="cpufreq-set -g performance"
+    cmd(cmd_str)
+    cmd_str="cpufreq-info -p"
+    cmd(cmd_str)
+
+    path="/proc/sys/kernel/numa_balancing"
+    cmd_str="echo 0 > %s"%path
+    cmd(cmd_str)
+    cmd_str="cat %s"%path
+    cmd(cmd_str)
+
+prepare_system_setup()
+
 output=args['output']
 yml=args['input']
 rps=args['rps']
