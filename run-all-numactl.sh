@@ -23,12 +23,16 @@ workload="compose-post,read-home-timeline,read-user-timeline,mixed-workload"
 workload="compose-post,read-user-timeline,mixed-workload"
 #workload="compose-post,read-home-timeline"
 
-file="/tmp/dsb.log"
+suffix=`date +%H-%M-%h-%d`
+log_dir="/home/fan/cxl/DeathStarBench/"
+
+file="/tmp/dsb-${suffix}.log"
+
 if [ "$1" != "" ];then
     file=$1
 fi
 
-for network in 'f'; do
+for network in 's' 'f'; do
     for node_id in 0 1 2; do
         echo $bin -n $network -w $workload -r $rps -d $duration -N $replicas -m m -M $node_id -t $threads -c $conn | tee -a $file
         $bin -n $network -w $workload -r $rps -d $duration -N $replicas -m m -M $node_id -t $threads -c $conn 2>&1 | tee -a $file
@@ -43,9 +47,5 @@ for network in 'f'; do
 done
 
 
-suffix=`date +%H-%M-%h-%d`
-log_dir="/home/fan/cxl/DeathStarBench/"
-
 cat $file | grep -v Stopping | grep -v Removing | grep -v Creating | grep -v Untagged | grep -v "Deleted:" > $log_dir/dsb-run-conn$conn-thread$threads-$suffix.log
-
 cd $cur

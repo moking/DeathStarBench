@@ -144,6 +144,7 @@ for replica in replicas:
     for thread in threads:
         for conn in connections:
             for network in networks:
+                print("Network:%s"%network)
                 for workload in workloads:
                     for rps in rpss:
                         for numa in numa_config:
@@ -152,8 +153,11 @@ for replica in replicas:
                             # print(real_tps[config])
                             if (numa == numa_config[0]):
                                 print("workload:%s,request-rate:%s"%(workload,rps))
-                                print("NUMA-policy\tAverage-latencies\tp99-latency\tTPS\tRPS")
+                                print("NUMA-policy\tAvg-lat\tp99-lat\tTPS\tRPS")
 
+                            numa = numa.replace("numa-membind-", "membind:")
+                            numa = numa.replace("numa-interleave-node-", "interleave:")
+                            numa = numa.replace("-", ",")
                             if print_lat99:
                                 print(numa, avg_latencies[config],latency99(latencies[config]), real_tps[config], real_rps[config])
                             else:
