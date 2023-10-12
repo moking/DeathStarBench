@@ -167,7 +167,7 @@ for workload in workload_list:
         rs.write("*************************************************************\n")
         rs.write(out+"\n")
         rs.write("*************************************************************\n")
-        tee("after running test\n", "/tmp/numactl.txt")
+        tee("MODE: %s, rps: %s, workload: %s: after running test\n"%(image_suffix[1:], rps, workload), "/tmp/numactl.txt")
         out=cmd("numactl -H")
         tee(out, "/tmp/numactl.txt")
         time.sleep(10)

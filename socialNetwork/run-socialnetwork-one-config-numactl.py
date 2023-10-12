@@ -355,7 +355,7 @@ print("******************************")
 
 numa_file="/tmp/numactl.txt"
 tee(output, numa_file)
-tee("Before construct socialNetwork\n", numa_file)
+tee("MODE: %s: Before construct socialNetwork\n"%image_suffix[1:], numa_file)
 cmd_tee("numactl -H", numa_file)
 
 print("Register users and construct social graph: %s\n"%network)
@@ -382,7 +382,7 @@ if not build_only:
     f.write(out)
     f.write("\n*------------OUTPUT: END---------------*\n")
 
-    cmd("After running test\n", numa_file)
+    tee("MODE: %s, rps: %s, workload: %s: after running test\n"%(image_suffix[1:], rps, workload), "/tmp/numactl.txt")
     cmd_tee("numactl -H", numa_file)
 
     cmd_tee("docker-compose -f %s down"%yml)
