@@ -14,14 +14,15 @@ fi
 
 threads=48
 conn=200
-duration=120
+duration=180
 rps='1000,5000,10000'
-#rps='5000'
-#rps='1000,5000'
+rps='100000'
+rps='5000'
 replicas=5
 workload="compose-post,read-home-timeline,read-user-timeline,mixed-workload"
 workload="compose-post,read-user-timeline,mixed-workload"
 #workload="compose-post,read-home-timeline"
+workload="compose-post,mixed-workload"
 
 suffix=`date +%H-%M-%h-%d`
 log_dir="/home/fan/cxl/DeathStarBench/"
@@ -32,7 +33,10 @@ if [ "$1" != "" ];then
     file=$1
 fi
 
-for network in 's' 'f'; do
+
+for i in 0 1 2 3 4 5 6 7 8 9; do
+
+for network in 's'; do
     for node_id in 0 1 2; do
         echo $bin -n $network -w $workload -r $rps -d $duration -N $replicas -m m -M $node_id -t $threads -c $conn | tee -a $file
         $bin -n $network -w $workload -r $rps -d $duration -N $replicas -m m -M $node_id -t $threads -c $conn 2>&1 | tee -a $file
@@ -44,6 +48,8 @@ for network in 's' 'f'; do
         $bin -n $network -w $workload -r $rps -d $duration -N $replicas -m i -M $node_id -t $threads -c $conn 2>&1 | tee -a $file
         echo
     done
+done
+
 done
 
 
